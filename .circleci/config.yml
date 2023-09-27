@@ -14,7 +14,7 @@ jobs:
             echo $version
             docker build -t paularinze/reddit-clone:$version .
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-            docker push paularinze/todo-app:$version
+            docker push paularinze/reddit-clone:$version
 
   Update_manifest:
     docker:
