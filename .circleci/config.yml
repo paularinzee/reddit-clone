@@ -1,19 +1,21 @@
 version: 2.1
+
 jobs:
-  build-and-push-image:
+  build_and_push:
     docker:
       - image: cimg/node:20.3.1
     steps:
       - checkout
-      - setup_remote_docker:
+      - setup_remote_docker
       - run:
-          name: Build and push image
+          name: Lets build and push image
           command: |
             version="build-$CIRCLE_BUILD_NUM"
             echo $version
-            docker build -t paularinze/reddit-clone:$version .
-            echo $DOCKER_PASSWORD | docker login -u paularinze --password-stdin
-            docker push paularinze/reddit-clone:$version
+            docker build -t paularinze/todo-app:$version .
+            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+            docker push paularinze/todo-app:$version
+
   Update_manifest:
     docker:
       - image: cimg/base:2023.06
@@ -26,7 +28,7 @@ jobs:
             TAG=$CIRCLE_BUILD_NUM
             ((TAG--))
             git clone https://github.com/paularinzee/kube-manifest.git
-            git config --global user.email "arinzennajipaul@gmail.com"
+            git config --global user.email "paularinze@gmail.com"
             git config --global user.name "paularinzee"
             pwd
             cd kube_manifest
@@ -37,15 +39,12 @@ jobs:
             git add .
             git commit -m "new build with imgTag build-$TAG"
             git config credential.helper 'cache --timeout=120'
-            git push -q https://$GITHUB_PERSONAL_TOKEN@github.com/paularinzee/kube-manifest.git master 
-
+            git push -q https://$GITHUB_PERSONAL_TOKEN@github.com/paularinzee/kube-manifest.git main 
 workflows:
-  the_jobs:
+  GitOpsflow:
     jobs:
-      - build-and-push-image
+      - build_and_push
       - Update_manifest:
           requires:
-            - build-and-push-image
-          
-    
-  
+            - build_and_push
+      
