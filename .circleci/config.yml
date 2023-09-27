@@ -1,22 +1,4 @@
 version: 2.1
-# orbs:
-#   sam: circleci/aws-sam-serverless@3.1.0
-# commands:
-#   install-kubectl:
-#     description: install kubectl
-#     steps:
-#       - run:
-#           name: Installing kubectl
-#           command: |
-#                   yum install tar gzip -y
-#                   curl --silent --location -o /usr/local/bin/kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/kubectl
-#                   chmod +x /usr/local/bin/kubectl
-#                   mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
-#                   kubectl version --client
-          
-#                   curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-#                   mv /tmp/eksctl /usr/local/bin
-#                   eksctl version
 jobs:
   build-and-push-image:
     docker:
@@ -27,7 +9,7 @@ jobs:
       - run:
           name: Build and push image
           command: |
-          version="build-$CIRCLE_BUILD_NUM"
+            version="build-$CIRCLE_BUILD_NUM"
             echo $version
             docker build -t paularinze/reddit-clone:$version .
             echo $DOCKER_PASSWORD | docker login -u paularinze --password-stdin
@@ -43,9 +25,9 @@ jobs:
           command: |
             TAG=$CIRCLE_BUILD_NUM
             ((TAG--))
-            git clone https://github.com/paularinze/kube_manifest.git
-            git config --global user.email "chauhanhimani512@gmail.com"
-            git config --global user.name "chauhan-himani"
+            git clone https://github.com/paularinzee/kube-manifest.git
+            git config --global user.email "arinzennajipaul@gmail.com"
+            git config --global user.name "paularinzee"
             pwd
             cd kube_manifest
             pwd
@@ -55,12 +37,15 @@ jobs:
             git add .
             git commit -m "new build with imgTag build-$TAG"
             git config credential.helper 'cache --timeout=120'
-            git push -q https://$GITHUB_PERSONAL_TOKEN@github.com/chauhan-himani/kube_manifest.git main 
+            git push -q https://$GITHUB_PERSONAL_TOKEN@github.com/paularinzee/kube-manifest.git master 
 
 workflows:
   the_jobs:
     jobs:
       - build-and-push-image
+      - Update_manifest:
+          requires:
+            - build-and-push-image
           
     
   
