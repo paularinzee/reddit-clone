@@ -28,7 +28,7 @@ jobs:
             TAG=$CIRCLE_BUILD_NUM
             ((TAG--))
             git clone https://github.com/paularinzee/kube-manifest.git
-            git config --global user.email "paularinze@gmail.com"
+            git config --global user.email "arinzennajipaul@gmail.com"
             git config --global user.name "paularinzee"
             pwd
             cd kube_manifest
